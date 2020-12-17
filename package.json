@@ -1,6 +1,6 @@
 {
   "name": "hourjs",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Sometimes we deal with TIME ONLY strings like '10:01' or '10:01:02' which are considered wrong formats by dayjs or momentjs.",
   "author": "cloydlau",
   "private": false,
