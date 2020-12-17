@@ -29,3 +29,5 @@ tsconfig.json
 .env.development
 /preview*.*
 demo/
+coverage/
+tests/
