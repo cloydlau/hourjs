@@ -5,8 +5,9 @@ momentjs.
 
 <p align="center">
   <a href="https://www.npmjs.com/package/hourjs"><img src="https://img.shields.io/npm/v/hourjs.svg?style=flat-square&colorB=51C838" alt="NPM Version"></a>
-  <a href="https://travis-ci.com/cloydlau/hourjs"><img src="https://img.shields.io/travis/cloydlau/hourjs/master.svg?style=flat-square" alt="Build Status"></a>
-  <a href="https://codecov.io/gh/cloydlau/hourjs"><img src="https://img.shields.io/codecov/c/github/cloydlau/hourjs/master.svg?style=flat-square" alt="Codecov"></a>
+  <a href="https://travis-ci.com/cloydlau/hourjs"><img src="https://img.shields.io/travis/cloydlau/hourjs.svg?style=flat-square" alt="Build Status"></a>
+  <a href="https://codecov.io/gh/cloydlau/hourjs"><img src="https://img.shields.io/codecov/c/github/cloydlau/hourjs.svg?style=flat-square" alt="Codecov"></a>
+  <img src="https://david-dm.org/cloydlau/hourjs.svg" alt="Dependencies Status">
   <a href="https://github.com/cloydlau/hourjs/blob/master/LICENSE"><img src="https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square" alt="License"></a>
 </p>
 
