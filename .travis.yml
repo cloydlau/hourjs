@@ -1,7 +1,7 @@
 language: node_js
 node_js: lts/*
-before_install:
-  - yarn global add codecov
+before_install: yarn global add codecov
+script: yarn jest
 after_success:
   - yarn cov
   - codecov
