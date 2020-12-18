@@ -10,7 +10,7 @@
   "browser": "dist/hourjs.iife.min.js",
   "scripts": {
     "build": "rollup -c",
-    "cov": "jest --coverage",
+    "cov": "jest --ci --coverage",
     "dev": "rollup -c -w --environment NODE_ENV:development",
     "jest": "jest --watchAll",
     "pretest": "npm run build"
