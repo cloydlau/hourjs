@@ -208,9 +208,15 @@ describe('比较运算', () => {
 
 describe('加减运算', () => {
   describe('add', () => {
-    describe('hour', () => {
+    describe('zero', () => {
       it('HH:mm', () => {
         expect(hourjs('05:12').add(0, 'hour').isSame('05:12')).toBe(true)
+        expect(hourjs('05:12:11').add(-0, 'second').isSame('05:12:11')).toBe(true)
+      })
+    })
+
+    describe('hour', () => {
+      it('HH:mm', () => {
         expect(hourjs('05:12').add(1, 'hour').isSame('06:12')).toBe(true)
       })
       it('HH:mm 进位', () => {
@@ -286,6 +292,13 @@ describe('加减运算', () => {
   })
 
   describe('subtract', () => {
+    describe('zero', () => {
+      it('HH:mm', () => {
+        expect(hourjs('05:12').subtract(0, 'hour').isSame('05:12')).toBe(true)
+        expect(hourjs('05:12:11').subtract(-0, 'second').isSame('05:12:11')).toBe(true)
+      })
+    })
+
     describe('hour', () => {
       it('HH:mm', () => {
         expect(hourjs('05:12').subtract(1, 'hour').isSame('04:12')).toBe(true)
