@@ -21,6 +21,8 @@ class HourJs {
   minutes_num: number
   seconds_num: number
   fiducial: number
+  fiducial_hour: number
+  fiducial_minute: number
 
   constructor (initTime?: HourJs | string) {
     if (initTime) {
@@ -32,6 +34,8 @@ class HourJs {
         this.seconds = initTime.seconds
         this.seconds_num = initTime.seconds_num
         this.fiducial = initTime.fiducial
+        this.fiducial_hour = initTime.fiducial_hour
+        this.fiducial_minute = initTime.fiducial_minute
       } else {
         const { paramFormat } = this.handleParam(initTime)
         const [hours, minutes, seconds] = initTime.split(':')
@@ -42,35 +46,50 @@ class HourJs {
         if (paramFormat === ParamFormat.HHmm) {
           this.seconds = '00'
           this.seconds_num = 0
-          this.fiducial = this.getFiducial(initTime)
+          this.fiducial = this.strToFiducial(initTime)
         } else {
           this.seconds = seconds
           this.seconds_num = Number(seconds)
-          this.fiducial = this.getFiducial(initTime)
+          this.fiducial = this.strToFiducial(initTime)
         }
+        this.fiducial_hour = Math.floor(this.fiducial / 10000) * 10000
+        this.fiducial_minute = Math.floor(this.fiducial / 100) * 100
       }
     }
     // 没传参取当前时间
     else {
-      const { hours_num, minutes_num, seconds_num, hours, minutes, seconds } = this.getCurrentTime()
+      const {
+        hours_num,
+        minutes_num,
+        seconds_num,
+        hours,
+        minutes,
+        seconds,
+        fiducial,
+        fiducial_hour,
+        fiducial_minute
+      } = this.getCurrentTime()
       this.seconds_num = seconds_num
       this.seconds = seconds
       this.minutes_num = minutes_num
       this.minutes = minutes
       this.hours_num = hours_num
       this.hours = hours
-      this.fiducial = Number(hours + minutes + seconds)
+      this.fiducial = fiducial
+      this.fiducial_hour = fiducial_hour
+      this.fiducial_minute = fiducial_minute
     }
   }
 
-  getCurrentTime () {
+  getCurrentTime (granularity?: string) {
     const now = new Date()
     const hours_num = now.getHours()
     const minutes_num = now.getMinutes()
     const seconds_num = now.getSeconds()
     const hours = this.toStr(hours_num, Unit.hour)
-    const minutes = this.toStr(minutes_num, Unit.minute)
-    const seconds = this.toStr(seconds_num, Unit.second)
+    const minutes = granularity === 'hour' ? '00' : this.toStr(minutes_num, Unit.minute)
+    const seconds = ['hour', 'minute'].includes(granularity) ? '00' : this.toStr(seconds_num, Unit.second)
+    const fiducial = this.strToFiducial(hours + minutes + seconds)
     return {
       hours_num,
       minutes_num,
@@ -78,12 +97,20 @@ class HourJs {
       hours,
       minutes,
       seconds,
-      fiducial: this.getFiducial(hours + minutes + seconds)
+      fiducial,
+      fiducial_hour: Math.floor(fiducial / 10000) * 10000,
+      fiducial_minute: Math.floor(fiducial / 100) * 100
     }
   }
 
-  handleParam (time?: string) {
+  handleParam (time?: string, granularity?: string) {
+    if (granularity) {
+      this.validateUnit(granularity)
+    }
     if (time) {
+      if (granularity === 'hour') {
+        time = time.substr(0, 3) + '00' + time.substr(5, time.length)
+      }
       if (/^\d{2}:\d{2}$/.test(time)) {
         const [hours, minutes] = time.split(':')
         return {
@@ -94,9 +121,12 @@ class HourJs {
           hours_num: Number(hours),
           minutes_num: Number(minutes),
           seconds_num: 0,
-          fiducial: this.getFiducial(time)
+          fiducial: this.strToFiducial(time)
         }
       } else if (/^\d{2}:\d{2}:\d{2}$/.test(time)) {
+        if (granularity === 'minute') {
+          time = time.substr(0, 6) + '00'
+        }
         const [hours, minutes, seconds] = time.split(':')
         return {
           paramFormat: ParamFormat.HHmmss,
@@ -106,7 +136,7 @@ class HourJs {
           hours_num: Number(hours),
           minutes_num: Number(minutes),
           seconds_num: Number(seconds),
-          fiducial: this.getFiducial(time)
+          fiducial: this.strToFiducial(time)
         }
       } else {
         throw Error(errPrefix + `参数格式为 HH:mm 或 HH:mm:ss `)
@@ -114,7 +144,7 @@ class HourJs {
     } else {
       return {
         paramFormat: ParamFormat.HHmmss,
-        ...this.getCurrentTime(),
+        ...this.getCurrentTime(granularity),
       }
     }
   }
@@ -142,11 +172,15 @@ class HourJs {
     return (time < 10 ? '0' : '') + time
   }
 
-  getFiducial (initTime: string): number {
+  strToFiducial (initTime: string): number {
     if (initTime.split(':').length - 1 === 1) {
       initTime += ':00'
     }
     return Number(initTime.replace(/:/g, ''))
+  }
+
+  getFiducial (granularity?: string) {
+    return granularity && granularity !== 'second' ? this['fiducial_' + granularity] : this.fiducial
   }
 
   preciseDiff (time?: HourJs | string) {
@@ -257,42 +291,46 @@ class HourJs {
     return this.addOrSubtract(-value, unit)
   }
 
-  isBetween (start?: HourJs | string, end?: HourJs | string, boundary: string = '[]') {
+  isBetween (start?: HourJs | string, end?: HourJs | string, granularity?: string, boundary: string = '[]') {
     if (!['[]', '[)', '()', '(]'].includes(boundary)) {
       throw Error(errPrefix + `${boundary}边界表达式需为 '[]', '[)', '()', '(]' 其中一种`)
     }
-    return (boundary.startsWith('[') ? this.isSameOrAfter(start) : this.isAfter(start)) &&
-      (boundary.endsWith(']') ? this.isSameOrBefore(end) : this.isBefore(end))
+    return (boundary.startsWith('[') ? this.isSameOrAfter(start, granularity) : this.isAfter(start, granularity)) &&
+      (boundary.endsWith(']') ? this.isSameOrBefore(end, granularity) : this.isBefore(end, granularity))
   }
 
-  isBefore (time?: HourJs | string) {
-    return time instanceof HourJs ? time.fiducial > this.fiducial :
-      this.handleParam(time).fiducial > this.fiducial
+  isBefore (time?: HourJs | string, granularity?: string) {
+    return (time instanceof HourJs ? time.getFiducial(granularity) :
+      this.handleParam(time, granularity).fiducial)
+      > this.getFiducial(granularity)
   }
 
-  isSameOrBefore (time?: HourJs | string) {
-    return time instanceof HourJs ? time.fiducial >= this.fiducial :
-      this.handleParam(time).fiducial >= this.fiducial
+  isSameOrBefore (time?: HourJs | string, granularity?: string) {
+    return (time instanceof HourJs ? time.getFiducial(granularity) :
+      this.handleParam(time, granularity).fiducial)
+      >= this.getFiducial(granularity)
   }
 
-  isAfter (time?: HourJs | string) {
-    return time instanceof HourJs ? time.fiducial < this.fiducial :
-      this.handleParam(time).fiducial < this.fiducial
+  isAfter (time?: HourJs | string, granularity?: string) {
+    return (time instanceof HourJs ? time.getFiducial(granularity) :
+      this.handleParam(time, granularity).fiducial)
+      < this.getFiducial(granularity)
   }
 
-  isSameOrAfter (time?: HourJs | string) {
-    return time instanceof HourJs ? time.fiducial <= this.fiducial :
-      this.handleParam(time).fiducial <= this.fiducial
+  isSameOrAfter (time?: HourJs | string, granularity?: string) {
+    return (time instanceof HourJs ? time.getFiducial(granularity) :
+      this.handleParam(time, granularity).fiducial)
+      <= this.getFiducial(granularity)
   }
 
-  isSame (time?: HourJs | string) {
+  isSame (time?: HourJs | string, granularity?: string) {
     if (time instanceof HourJs) {
-      return time.fiducial === this.fiducial
+      return time.getFiducial(granularity) === this.getFiducial(granularity)
     } else {
-      const { hours, minutes, seconds } = this.handleParam(time)
+      const { hours, minutes, seconds } = this.handleParam(time, granularity)
       return hours === this.hours
-        && minutes === this.minutes
-        && seconds === this.seconds
+        && (granularity === 'hour' || minutes === this.minutes)
+        && (['hour', 'minute'].includes(granularity) || seconds === this.seconds)
     }
   }
 }

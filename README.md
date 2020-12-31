@@ -36,16 +36,16 @@ import hourjs from 'hourjs'
 
 // Avaliable API for now
 hourjs().isSame()
-hourjs().isBetween()
+hourjs('18:44').isBetween('18:01', '18:03', 'hour', '[]')
 
-hourjs().isBefore()
-hourjs().isSameOrBefore()
+hourjs('18:44').isBefore('18:44')
+hourjs('18:44:01').isSameOrBefore('18:44:01')
 
-hourjs().isAfter()
-hourjs().isSameOrAfter()
+hourjs('18:44:01').isAfter('18:44')
+hourjs('18:44').isSameOrAfter('18:44:01')
 
-hourjs().add()
-hourjs().subtract()
+hourjs().add(2, 'hour')
+hourjs().subtract(3, 'minute')
 
 hourjs().preciseDiff()
 ```
@@ -107,8 +107,11 @@ will return:
 
 - hourjs is more concise
 - dayjs do not unify the usage between ordinary date strings and none-date strings
-- dayjs didn't take in the *preciseDiff* PR, the plugin author publish [dayjs-precise-range](https://github.com/huangjinlin/dayjs-precise-range) under ISC licence
-> *duration* plugin of dayjs can be used for diff calculation, but it's indirect to indicate sequence of time
+- dayjs will return false when you pass the wrong arguments instead of throwing an error
+- dayjs didn't take in the *preciseDiff* PR, the plugin author
+  publish [dayjs-precise-range](https://github.com/huangjinlin/dayjs-precise-range) under ISC licence
+
+  > *duration* plugin of dayjs can be used for diff calculation, but it's indirect to indicate sequence of time
 
 ```js
 import dayjs from 'dayjs'

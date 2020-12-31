@@ -48,64 +48,64 @@ describe('比较运算', () => {
 
     describe('()', () => {
       it('HH:mm', () => {
-        expect(hourjs('05:12').isBetween('05:11', '05:13', '()')).toBe(true)
+        expect(hourjs('05:12').isBetween('05:11', '05:13', undefined, '()')).toBe(true)
       })
       it('HH:mm:ss', () => {
-        expect(hourjs('05:12:01').isBetween('05:11:01', '05:13:01', '()')).toBe(true)
+        expect(hourjs('05:12:01').isBetween('05:11:01', '05:13:01', undefined, '()')).toBe(true)
       })
       it('HH:mm:ss - HH:mm - HH:mm:ss', () => {
-        expect(hourjs('05:12:01').isBetween('05:12', '05:13:01', '()')).toBe(true)
+        expect(hourjs('05:12:01').isBetween('05:12', '05:13:01', undefined, '()')).toBe(true)
       })
       it('HH:mm:ss - HH:mm:ss - HH:mm', () => {
-        expect(hourjs('05:12:01').isBetween('05:12:00', '05:13', '()')).toBe(true)
+        expect(hourjs('05:12:01').isBetween('05:12:00', '05:13', undefined, '()')).toBe(true)
       })
       it('HH:mm - HH:mm - HH:mm:ss', () => {
-        expect(hourjs('05:12').isBetween('05:11', '05:13:01', '()')).toBe(true)
+        expect(hourjs('05:12').isBetween('05:11', '05:13:01', undefined, '()')).toBe(true)
       })
       it('HH:mm - HH:mm:ss - HH:mm', () => {
-        expect(hourjs('05:12').isBetween('05:11:59', '05:13', '()')).toBe(true)
+        expect(hourjs('05:12').isBetween('05:11:59', '05:13', undefined, '()')).toBe(true)
       })
     })
 
     describe('[)', () => {
       it('HH:mm', () => {
-        expect(hourjs('05:12').isBetween('05:12', '05:13', '[)')).toBe(true)
+        expect(hourjs('05:12').isBetween('05:12', '05:13', undefined, '[)')).toBe(true)
       })
       it('HH:mm:ss', () => {
-        expect(hourjs('05:12:01').isBetween('05:12:01', '05:13:01', '[)')).toBe(true)
+        expect(hourjs('05:12:01').isBetween('05:12:01', '05:13:01', undefined, '[)')).toBe(true)
       })
       it('HH:mm:ss - HH:mm - HH:mm:ss', () => {
-        expect(hourjs('05:12:00').isBetween('05:12', '05:13:01', '[)')).toBe(true)
+        expect(hourjs('05:12:00').isBetween('05:12', '05:13:01', undefined, '[)')).toBe(true)
       })
       it('HH:mm:ss - HH:mm:ss - HH:mm', () => {
-        expect(hourjs('05:12:01').isBetween('05:12:01', '05:13', '[)')).toBe(true)
+        expect(hourjs('05:12:01').isBetween('05:12:01', '05:13', undefined, '[)')).toBe(true)
       })
       it('HH:mm - HH:mm - HH:mm:ss', () => {
-        expect(hourjs('05:12').isBetween('05:12', '05:13:01', '[)')).toBe(true)
+        expect(hourjs('05:12').isBetween('05:12', '05:13:01', undefined, '[)')).toBe(true)
       })
       it('HH:mm - HH:mm:ss - HH:mm', () => {
-        expect(hourjs('05:12').isBetween('05:12:00', '05:13', '[)')).toBe(true)
+        expect(hourjs('05:12').isBetween('05:12:00', '05:13', undefined, '[)')).toBe(true)
       })
     })
 
     describe('(]', () => {
       it('HH:mm', () => {
-        expect(hourjs('05:12').isBetween('05:11', '05:12', '(]')).toBe(true)
+        expect(hourjs('05:12').isBetween('05:11', '05:12', undefined, '(]')).toBe(true)
       })
       it('HH:mm:ss', () => {
-        expect(hourjs('05:12:01').isBetween('05:12:00', '05:12:01', '(]')).toBe(true)
+        expect(hourjs('05:12:01').isBetween('05:12:00', '05:12:01', undefined, '(]')).toBe(true)
       })
       it('HH:mm:ss - HH:mm - HH:mm:ss', () => {
-        expect(hourjs('05:12:00').isBetween('05:11', '05:12:00', '(]')).toBe(true)
+        expect(hourjs('05:12:00').isBetween('05:11', '05:12:00', undefined, '(]')).toBe(true)
       })
       it('HH:mm:ss - HH:mm:ss - HH:mm', () => {
-        expect(hourjs('05:12:00').isBetween('05:11:59', '05:12', '(]')).toBe(true)
+        expect(hourjs('05:12:00').isBetween('05:11:59', '05:12', undefined, '(]')).toBe(true)
       })
       it('HH:mm - HH:mm - HH:mm:ss', () => {
-        expect(hourjs('05:12').isBetween('05:11', '05:12:00', '(]')).toBe(true)
+        expect(hourjs('05:12').isBetween('05:11', '05:12:00', undefined, '(]')).toBe(true)
       })
       it('HH:mm - HH:mm:ss - HH:mm', () => {
-        expect(hourjs('05:12').isBetween('05:11:59', '05:12', '(]')).toBe(true)
+        expect(hourjs('05:12').isBetween('05:11:59', '05:12', undefined, '(]')).toBe(true)
       })
     })
   })
@@ -588,13 +588,55 @@ describe('默认参数', () => {
     expect(hourjs().isBetween()).toBe(true)
   })
   it('isBetween ()', () => {
-    expect(hourjs().isBetween(...[, , '()'])).toBe(false)
+    expect(hourjs().isBetween(...[, , , '()'])).toBe(false)
   })
   it('isBetween [)', () => {
-    expect(hourjs().isBetween(...[, , '[)'])).toBe(false)
+    expect(hourjs().isBetween(...[, , , '[)'])).toBe(false)
   })
   it('isSame (]', () => {
-    expect(hourjs().isBetween(...[, , '(]'])).toBe(false)
+    expect(hourjs().isBetween(...[, , , '(]'])).toBe(false)
+  })
+  it('preciseDiff', () => {
+    expect(hourjs().preciseDiff()).toEqual(sameResult)
+  })
+})
+
+describe('granularity', () => {
+  it('isSame', () => {
+    expect(hourjs('01:01').isSame('01:00', 'hour')).toBe(true)
+    expect(hourjs('01:01:57').isSame('01:01:24', 'minute')).toBe(true)
+  })
+  it('isBefore', () => {
+    expect(hourjs('01:01').isBefore('01:02', 'hour')).toBe(false)
+  })
+  it('isSameOrBefore', () => {
+    expect(hourjs('01:01').isSameOrBefore('01:02', 'hour')).toBe(true)
+  })
+  it('isAfter', () => {
+    expect(hourjs('01:03').isAfter('01:02', 'hour')).toBe(false)
+  })
+  it('now', () => {
+    expect(hourjs().isAfter(hourjs().add(-1, 'minute'), 'minute')).toBe(true)
+    expect(hourjs().isAfter(hourjs().add(-1, 'minute'), 'second')).toBe(true)
+    expect(hourjs().isAfter(hourjs().add(-1, 'second'), 'second')).toBe(true)
+    expect(hourjs().subtract(-1, 'hour').isAfter(undefined, 'hour')).toBe(true)
+    expect(hourjs().subtract(-1, 'hour').isAfter(undefined, 'minute')).toBe(true)
+    expect(hourjs().subtract(-1, 'hour').isAfter(hourjs(), 'second')).toBe(true)
+  })
+  it('isSameOrAfter', () => {
+    expect(hourjs('01:03').isSameOrAfter('01:03', 'hour')).toBe(true)
+  })
+  it('isBetween', () => {
+    expect(hourjs('01:05').isBetween('01:01', '01:03', 'hour')).toBe(true)
+  })
+  it('isBetween ()', () => {
+    expect(hourjs().isBetween(...[, , , '()'])).toBe(false)
+  })
+  it('isBetween [)', () => {
+    expect(hourjs().isBetween(...[, , , '[)'])).toBe(false)
+  })
+  it('isSame (]', () => {
+    expect(hourjs().isBetween(...[, , , '(]'])).toBe(false)
   })
   it('preciseDiff', () => {
     expect(hourjs().preciseDiff()).toEqual(sameResult)
@@ -614,7 +656,7 @@ describe('参数错误', () => {
   })
   it('边界表达式格式错误', () => {
     expect(() => {
-      hourjs('05:12').isBetween('05:12', '05:13', '[>')
+      hourjs('05:12').isBetween('05:12', '05:13', undefined, '[>')
     }).toThrow()
   })
 })
