@@ -153,8 +153,11 @@ class HourJs {
     const handler = ({ hours_num, minutes_num, seconds_num, latterFiducial }:
       { hours_num: number, minutes_num: number, seconds_num: number, latterFiducial: number }) => {
       const diffNum = latterFiducial - this.fiducial
+      const isSame = diffNum === 0
       const isAfter = diffNum < 0
+      const isBefore = diffNum > 0
       const isSameOrAfter = diffNum <= 0
+      const isSameOrBefore = diffNum >= 0
 
       let hourDiff = hours_num - this.hours_num
       let minDiff = minutes_num - this.minutes_num
@@ -181,8 +184,11 @@ class HourJs {
       }
 
       return {
+        isSame,
         isAfter,
+        isBefore,
         isSameOrAfter,
+        isSameOrBefore,
         hours: hourDiff,
         minutes: minDiff,
         seconds: secDiff,

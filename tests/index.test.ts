@@ -4,8 +4,11 @@ const sameResult = {
   hours: 0,
   minutes: 0,
   seconds: 0,
+  isSame: true,
   isAfter: false,
+  isBefore: false,
   isSameOrAfter: true,
+  isSameOrBefore: true,
 }
 
 describe('比较运算', () => {
@@ -365,14 +368,17 @@ describe('加减运算', () => {
 })
 
 describe('差值运算', () => {
-  describe('isAfter', () => {
+  describe('isSame', () => {
     it('HH:mm', () => {
-      expect(hourjs('06:01').preciseDiff('05:11')).toEqual({
+      expect(hourjs('06:01').preciseDiff('06:01')).toEqual({
         hours: 0,
-        minutes: 50,
+        minutes: 0,
         seconds: 0,
-        isAfter: true,
+        isSame: true,
+        isAfter: false,
+        isBefore: false,
         isSameOrAfter: true,
+        isSameOrBefore: true,
       })
     })
     it('HH:mm:ss', () => {
@@ -380,17 +386,23 @@ describe('差值运算', () => {
         hours: 1,
         minutes: 0,
         seconds: 59,
+        isSame: false,
         isAfter: true,
+        isBefore: false,
         isSameOrAfter: true,
+        isSameOrBefore: false,
       })
     })
     it('HH:mm:ss - HH:mm', () => {
-      expect(hourjs('06:01:01').preciseDiff('05:11')).toEqual({
+      expect(hourjs('06:01:00').preciseDiff('06:01')).toEqual({
         hours: 0,
-        minutes: 50,
-        seconds: 1,
-        isAfter: true,
+        minutes: 0,
+        seconds: 0,
+        isSame: true,
+        isAfter: false,
+        isBefore: false,
         isSameOrAfter: true,
+        isSameOrBefore: true,
       })
     })
     it('HH:mm - HH:mm:ss', () => {
@@ -398,8 +410,113 @@ describe('差值运算', () => {
         hours: 0,
         minutes: 0,
         seconds: 59,
+        isSame: false,
         isAfter: true,
+        isBefore: false,
         isSameOrAfter: true,
+        isSameOrBefore: false,
+      })
+    })
+  })
+
+  describe('isAfter', () => {
+    it('HH:mm', () => {
+      expect(hourjs('06:01').preciseDiff('05:11')).toEqual({
+        hours: 0,
+        minutes: 50,
+        seconds: 0,
+        isSame: false,
+        isAfter: true,
+        isBefore: false,
+        isSameOrAfter: true,
+        isSameOrBefore: false,
+      })
+    })
+    it('HH:mm:ss', () => {
+      expect(hourjs('06:12:19').preciseDiff('05:11:20')).toEqual({
+        hours: 1,
+        minutes: 0,
+        seconds: 59,
+        isSame: false,
+        isAfter: true,
+        isBefore: false,
+        isSameOrAfter: true,
+        isSameOrBefore: false,
+      })
+    })
+    it('HH:mm:ss - HH:mm', () => {
+      expect(hourjs('06:01:01').preciseDiff('05:11')).toEqual({
+        hours: 0,
+        minutes: 50,
+        seconds: 1,
+        isSame: false,
+        isAfter: true,
+        isBefore: false,
+        isSameOrAfter: true,
+        isSameOrBefore: false,
+      })
+    })
+    it('HH:mm - HH:mm:ss', () => {
+      expect(hourjs('05:02').preciseDiff('05:11:01')).toEqual({
+        hours: 0,
+        minutes: 9,
+        seconds: 1,
+        isSame: false,
+        isAfter: false,
+        isBefore: true,
+        isSameOrAfter: false,
+        isSameOrBefore: true,
+      })
+    })
+  })
+
+  describe('isBefore', () => {
+    it('HH:mm', () => {
+      expect(hourjs('04:01').preciseDiff('05:11')).toEqual({
+        hours: 1,
+        minutes: 10,
+        seconds: 0,
+        isSame: false,
+        isAfter: false,
+        isBefore: true,
+        isSameOrAfter: false,
+        isSameOrBefore: true,
+      })
+    })
+    it('HH:mm:ss', () => {
+      expect(hourjs('04:12:19').preciseDiff('05:11:20')).toEqual({
+        hours: 0,
+        minutes: 59,
+        seconds: 1,
+        isSame: false,
+        isAfter: false,
+        isBefore: true,
+        isSameOrAfter: false,
+        isSameOrBefore: true,
+      })
+    })
+    it('HH:mm:ss - HH:mm', () => {
+      expect(hourjs('04:22:59').preciseDiff('05:11')).toEqual({
+        hours: 0,
+        minutes: 48,
+        seconds: 1,
+        isSame: false,
+        isAfter: false,
+        isBefore: true,
+        isSameOrAfter: false,
+        isSameOrBefore: true,
+      })
+    })
+    it('HH:mm - HH:mm:ss', () => {
+      expect(hourjs('05:10').preciseDiff('05:11:01')).toEqual({
+        hours: 0,
+        minutes: 1,
+        seconds: 1,
+        isSame: false,
+        isAfter: false,
+        isBefore: true,
+        isSameOrAfter: false,
+        isSameOrBefore: true,
       })
     })
   })
