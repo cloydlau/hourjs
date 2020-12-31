@@ -103,9 +103,7 @@ will return:
 
 <br>
 
-### Use *dayjs* for same purpose
-
-What's the difference?
+### What's different comparing to use *dayjs* for same purpose
 
 - hourjs is more concise
 - dayjs do not unify the usage between ordinary date strings and none-date strings
